@@ -183,7 +183,8 @@ RUN apt update && apt install -y \
     ros-humble-rosbag2-storage-mcap \
     netcat-openbsd \
     rsync \
-    libserialport-dev
+    libserialport-dev \ 
+    gpsd-clients
 USER ${LABNAME}
 
 # Install Python dependencies
