@@ -143,7 +143,14 @@ RUN svn co https://oceanai.mit.edu/svn/moos-ivp-aro/trunk moos-ivp
 WORKDIR /home/${LABNAME}/moos-ivp
 RUN ./build-moos.sh
 RUN ./build-ivp.sh
+
+# Build moos-ivp-extend stuff
+WORKDIR /home/${LABNAME}/moos-ivp-extend
+RUN ./build.sh
+
 WORKDIR /home/${LABNAME}
+
+
 
 # Install development dependencies (rqt, plotjuggler, documentation, etc.)
 USER root
