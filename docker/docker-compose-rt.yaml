@@ -17,6 +17,7 @@ services:
       - ../cougars-ros2:/home/frostlab/ros2_ws
       - ../cougars-teensy:/home/frostlab/teensy_ws
       - ../cougars-gpio:/home/frostlab/gpio
+      - ../moos-ivp-extend:/home/frostlab/moos-ivp-extend
       - /etc/localtime:/etc/localtime:ro # Syncs the container's time with the host
       - /dev:/dev:rw
       - /run/udev:/run/udev:ro
