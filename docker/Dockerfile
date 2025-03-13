@@ -146,6 +146,7 @@ RUN ./build-ivp.sh
 
 # Build moos-ivp-extend stuff
 WORKDIR /home/${LABNAME}/moos-ivp-extend
+RUN ./clean.sh
 RUN ./build.sh
 
 WORKDIR /home/${LABNAME}
