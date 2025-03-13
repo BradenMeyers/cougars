@@ -47,6 +47,9 @@ case $1 in
     # Quick permission fix for GPIO access in the container
     docker exec --user root cougars bash -c "bash /home/frostlab/gpio/permission_fix.sh $GPIO_CHIP"
 
+    # setting up some stuff
+    docker exec --user frostlab cougars bash -c "bash /home/frostlab/moos-ivp-extend/scripts/clean_build.sh"
+
     docker exec -it cougars bash
     ;;
 esac
