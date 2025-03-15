@@ -193,7 +193,8 @@ RUN pip3 install numpy==1.24.0 \
     matplotlib \
     pyproj \
     pymavlink \
-    ruamel
+    ruamel.yaml
+
 RUN echo "export PATH=$PATH:/home/${LABNAME}/.local/bin:/home/${LABNAME}/moos-ivp/bin" >> /home/${LABNAME}/.bashrc
 
 # Update and upgrade
