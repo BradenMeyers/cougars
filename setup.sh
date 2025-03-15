@@ -20,6 +20,26 @@ function printError {
 
 printWarning "This script should be run from the root of the CoUGARS directory"
 
+
+# Ask user for clone method choice: HTTPS or SSH
+echo "Choose cloning method for repositories:"
+echo "1) SSH"
+echo "2) HTTPS"
+read -p "Enter the number of your choice [1 or 2]: " clone_method
+
+if [ "$clone_method" -eq 1 ]; then
+    CLONE_PREFIX="git@github.com:BYU-FRoSt-Lab"
+    printInfo "Cloning using SSH"
+elif [ "$clone_method" -eq 2 ]; then
+    CLONE_PREFIX="https://github.com/BYU-FRoSt-Lab"
+    printInfo "Cloning using HTTPS"
+else
+    printError "Invalid choice. Defaulting to SSH."
+    CLONE_PREFIX="git@github.com:BYU-FRoSt-Lab"
+fi
+
+
+
 if [ "$(uname -m)" == "aarch64" ]; then
 
   ### START RT-SPECIFIC SETUP ###
@@ -132,8 +152,8 @@ else
   fi
 
   # Copy repos from GitHub
-  git clone https://github.com/BYU-FRoSt-Lab/cougars-docs.git
-  git clone https://github.com/BYU-FRoSt-Lab/cougars-base-station.git
+  git clone $CLONE_PREFIX/cougars-docs.git
+  git clone $CLONE_PREFIX/cougars-base-station.git
 
   ### END DEV-SPECIFIC SETUP ###
 
@@ -143,8 +163,9 @@ fi
 unset LC_ALL
 
 # Copy repos from GitHub
-git clone https://github.com/BYU-FRoSt-Lab/cougars-ros2.git
-git clone https://github.com/BYU-FRoSt-Lab/cougars-teensy.git
-git clone https://github.com/BYU-FRoSt-Lab/cougars-gpio.git
+git clone $CLONE_PREFIX/cougars-ros2.git
+git clone $CLONE_PREFIX/cougars-teensy.git
+git clone $CLONE_PREFIX/cougars-gpio.git
+git clone $CLONE_PREFIX/moos-ivp-extend.git
 
 printInfo "Make sure to update the vehicle-specific configuration files in "config" now"
