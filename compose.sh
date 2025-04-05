@@ -7,7 +7,7 @@
 # - This can also be used to open a new bash terminal in an already running container
 # - Make sure you run this from the root of the top-level repo
 
-source config/bash_vars.sh
+source config/cougarsrc.sh
 
 function printInfo {
   echo -e "\033[0m\033[36m[INFO] $1\033[0m"

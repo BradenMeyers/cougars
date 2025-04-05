@@ -133,7 +133,7 @@ else
   # TODO: Maybe not needed if we do all the work in the Docker image?
   # Get the cougars workspace location on the development machine
   current_dir=$(pwd)
-  source_file=$current_dir/config/bash_vars.sh
+  source_file=$current_dir/config/cougarsrc.sh
 
   # Attempt to add the current workspace directory to the source file
   if ! grep -q "COUG_WORKSPACE_DIR" $source_file; then
