@@ -1,9 +1,12 @@
 #!/bin/bash
 
 # build custom moos stuff
-# cd /home/frostlab/moos-ivp-extend/scripts
-# bash clean_build.sh
+cd /home/frostlab/moos-ivp-extend/scripts
+bash clean_build.sh
 
+source /opt/ros/humble/setup.bash
+cd /home/frostlab/ros2_ws
+MAKEFLAGS="-j 2" colcon build
 
 # TODO change this if from aarch to a bash param
 if [ "$(uname -m)" == "aarch64" ]; then
