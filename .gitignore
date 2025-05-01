@@ -10,6 +10,5 @@ cougars_base_station
 moos-ivp-extend
 cougars_sim_converters
 !config/cougarsrc.sh
-!config/fast_discovery_config.xml
 !config/coug*.yaml
 
