@@ -49,7 +49,7 @@ case $1 in
       tmux send-keys -t cougars:coug.2 "bash record.sh <acoustics>" # Don't start just yet
 
       tmux send-keys -t cougars:coug.3 "cd ~/config" ENTER
-      tmux send-keys -t cougars:coug.3 "cat vehicle_params.yaml" ENTER
+      tmux send-keys -t cougars:coug.3 "cat $VEHICLE_PARAMS_FILE" ENTER
 
       ### SECOND WINDOW - MOOS SCRIPTS ###
 
