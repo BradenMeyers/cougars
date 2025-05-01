@@ -12,4 +12,4 @@ cougars_sim_converters
 !config/cougarsrc.sh
 !config/coug*params.yaml
 !config/fleet_params.yaml
-
+config/tmp_mission
