@@ -19,3 +19,5 @@
     origin.altitude: 1367.00 # from testing
 
     # mission_start_time: 1739302061  # Time offset to reduce bytes in timestamp
+
+    mission_file_path: '/home/frostlab/config/mission_states.json'

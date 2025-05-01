@@ -1,9 +1,3 @@
-/**:
-  ros__parameters:
-    fluid_pressure_atm: 89206.11402914838
-    magnetic_declination: 10.7
-    water_salinity_ppt: 0.0
-
 coug0:
   battery_sub:
     ros__parameters:
