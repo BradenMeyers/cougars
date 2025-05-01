@@ -1,8 +1,12 @@
 #!/bin/bash
 
-# build custom moos stuff
-cd /home/frostlab/moos-ivp-extend/scripts
-bash clean_build.sh
+source ~/config/cougarsrc.sh
+
+# # build custom moos stuff
+# cd /home/frostlab/moos-ivp-extend/scripts
+# bash clean_build.sh
+
+# Consider doing something for gpio permissions here if needed
 
 source /opt/ros/humble/setup.bash
 cd /home/frostlab/ros2_ws
