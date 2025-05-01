@@ -6,6 +6,7 @@ export LABNAME='frostlab'
 source /home/$LABNAME/ros2_ws/install/setup.bash
 export FASTRTPS_DEFAULT_PROFILES_FILE=/home/$LABNAME/config/fast_discovery_config.xml
 
+# TODO: This will only work inside the container but it hopefully only needs to work inside the container
 source ~/config/cougrc.sh
 
 
