@@ -32,9 +32,6 @@ case $1 in
       docker compose -f docker/docker-compose-dev.yaml up -d
     fi
 
-    # Quick permission fix for GPIO access in the container
-    docker exec --user root cougars bash -c "bash /home/frostlab/gpio/permission_fix.sh $GPIO_CHIP"
-
     docker exec -it cougars bash
     ;;
 esac
