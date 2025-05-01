@@ -10,5 +10,6 @@ cougars_base_station
 moos-ivp-extend
 cougars_sim_converters
 !config/cougarsrc.sh
-!config/coug*.yaml
+!config/coug*params.yaml
+!config/fleet_params.yaml
 
