@@ -26,6 +26,7 @@ services:
       - ../cougars-base-station:/home/frostlab/base_station
       - ../moos-ivp-extend:/home/frostlab/moos-ivp-extend
       - ./startup:/home/frostlab/startup
+      - ../.ssh_keys:/home/frostlab/.ssh     # Syncs ssh keys for the vehicles to save and speed up the process
       - /dev:/dev:rw
       - /etc/localtime:/etc/localtime:ro # Syncs the container's time with the host
       - /tmp/.X11-unix:/tmp/.X11-unix # Required for GUI applications
