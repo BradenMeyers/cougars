@@ -159,7 +159,6 @@ RUN if [ "$TARGETARCH" = "amd64" ]; then \
     gir1.2-gtk-3.0 \
     x11-apps \
     ros-humble-rqt* \
-    ros-humble-plotjuggler-ros \
     ros-humble-rviz2 \
     python3-rosdoc2 \
     && apt clean \
