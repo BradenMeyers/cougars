@@ -62,11 +62,11 @@ else
 
   printInfo "Setting up CoUGARs on a development machine"
 
+  printInfo "Do you want to install vim, tmux, and mosh"
   # Install dependencies
-  sudo apt install -y vim tmux git mosh
+  sudo apt install vim tmux git mosh
 
   ### END DEV-SPECIFIC SETUP ###
-
 fi
 
 # Set up bag directory
@@ -84,13 +84,16 @@ else
     cp -r templates/* config/
 fi
 
-# Set up tmux config file
-if [ -f ~/.tmux.conf ]; then
-    printWarning "The tmux config symlink already exists"
-else
-  sudo ln -s /home/frostlab/cougars/config/local/.tmux.conf ~/.tmux.conf
-  tmux source-file ~/.tmux.conf
-fi
+# TODO we will setup tmux inside the container, so this is not needed
+# # Set up tmux config file
+# if [ -f ~/.tmux.conf ]; then
+#     printWarning "The tmux config symlink already exists"
+# else
+#   # TODO This isnt gonna work if the user is not frostlab
+
+#   sudo ln -s /home/frostlab/cougars/config/local/.tmux.conf ~/.tmux.conf
+#   tmux source-file ~/.tmux.conf
+# fi
 
 if [ "$(uname -m)" == "aarch64" ]; then
 
@@ -120,30 +123,10 @@ else
 
   ### START DEV-SPECIFIC SETUP ###
 
-  # TODO: Maybe not needed if we do all the work in the Docker image?
-  # Get the cougars workspace location on the development machine
-  current_dir=$(pwd)
-  source_file=$current_dir/config/cougarsrc.sh
-
-  # Attempt to add the current workspace directory to the source file
-  if ! grep -q "COUG_WORKSPACE_DIR" $source_file; then
-    echo "export COUG_WORKSPACE_DIR=$current_dir" >> $source_file
-    printInfo "Saved the cougars workspace path to $source_file"
-  else
-    printWarning "The cougars workspace path already exists in $source_file"
-  fi
-
-  # Attempt to add the source file to the local user's .bashrc
-  if ! grep -q "source $source_file" ~/.bashrc; then
-    echo "source $source_file" >> ~/.bashrc
-    printInfo "Added automatic sourcing of bash variables to .bashrc"
-  else
-    printWarning "Automatic sourcing of bash variables is already set up in .bashrc"
-  fi
-
   # Copy repos from GitHub
   git clone $CLONE_PREFIX/cougars-docs.git
   git clone $CLONE_PREFIX/cougars-base-station.git
+  sudo chmod a+w -R cougars-docs cougars-base-station
 
   ### END DEV-SPECIFIC SETUP ###
 
@@ -156,6 +139,8 @@ unset LC_ALL
 git clone $CLONE_PREFIX/cougars-ros2.git
 git clone $CLONE_PREFIX/cougars-teensy.git
 git clone $CLONE_PREFIX/cougars-gpio.git
-git clone $CLONE_PREFIX/moos-ivp-extend.git
 
 printInfo "Make sure to update the vehicle-specific configuration files in "config" now"
+
+# TODO add the prompt to ask if the user wants to do this
+sudo chmod a+w -R cougars-ros2 cougars-teensy cougars-gpio

@@ -3,6 +3,7 @@
 #
 export LABNAME='frostlab'
 
+source /opt/ros/humble/setup.bash
 source /home/$LABNAME/ros2_ws/install/setup.bash
 # export FASTRTPS_DEFAULT_PROFILES_FILE=/home/$LABNAME/config/fast_discovery_config.xml
 export FLEET_PARAMS_FILE=/home/frostlab/config/deploy_tmp/fleet_params.yaml # ex. /home/frostlab/config/fleet_params.yaml

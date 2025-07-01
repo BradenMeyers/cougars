@@ -3,7 +3,6 @@ FROM ros:humble-ros-base
 
 ARG LABNAME=frostlab
 ARG DEBIAN_FRONTEND=noninteractive
-ARG TARGETARCH
 
 # TODO remove apt lists afer every RUN
 # DO WE NEED THIS?
@@ -21,7 +20,10 @@ RUN apt update && apt install -y \
     software-properties-common \
     python3-venv \
     libboost-all-dev \
-    cmake
+    cmake \ 
+    python3-pip
+# TODO remove apt lists
+
 
 # Set up a new user
 RUN useradd -ms /bin/bash ${LABNAME} \
@@ -34,6 +36,18 @@ RUN curl https://download.koromix.dev/debian/koromix-archive-keyring.gpg -o /etc
     && echo "deb [signed-by=/etc/apt/keyrings/koromix-archive-keyring.gpg] https://download.koromix.dev/debian stable main" > /etc/apt/sources.list.d/koromix.dev-stable.list \
     && apt update && apt install -y tytools
 
+
+    # Install Python dependencies
+RUN pip3 install numpy==1.24.0 \
+    scipy \
+    matplotlib \
+    pyproj \
+    pymavlink \
+    ruamel.yaml \ 
+    tmuxp \ 
+    pybind11_stubgen
+
+
 # INSTALL GTSAM
 WORKDIR /home/${LABNAME}/
 RUN git clone --depth 1 https://github.com/borglab/gtsam.git && \
@@ -45,14 +59,15 @@ RUN git clone --depth 1 https://github.com/borglab/gtsam.git && \
 
 WORKDIR /home/${LABNAME}/gtsam/build 
 RUN cmake .. -DGTSAM_BUILD_PYTHON=ON -DGTSAM_PYTHON_VERSION=3.10.12 \
-    && make python-install 
+    && make -j"$(nproc)" python-install
 
+    
+    
 WORKDIR /home/${LABNAME}
-
-
 # Install PlatformIO
-RUN curl -fsSL https://raw.githubusercontent.com/platformio/platformio-core-installer/master/get-platformio.py | python3 && \
-    rm -f get-platformio.py
+RUN curl -fsSL -o get-platformio.py https://raw.githubusercontent.com/platformio/platformio-core-installer/master/get-platformio.py \
+    && python3 get-platformio.py \
+    && rm -f get-platformio.py
 
 # Set up PlatformIO shell commands
 RUN install -d /usr/local/bin && \
@@ -86,23 +101,15 @@ RUN apt update && apt install -y \
     libserialport-dev \ 
     gpsd-clients \
     tmux \
+    ros-humble-gps-msgs \
+    ros-humble-gpsd-client \
     && rm -rf /var/lib/apt/lists/*
-
-
-# Install Python dependencies
-RUN pip3 install numpy==1.24.0 \
-    scipy \
-    matplotlib \
-    pyproj \
-    pymavlink \
-    ruamel.yaml \ 
-    tmuxp
-
 
 
 
 # Set up bash variable sourcing (Make sure this exists as a volume when you run the container!)
 RUN echo "source /home/${LABNAME}/config/cougarsrc.sh" >> ~/.bashrc \
+    && echo "source /opt/ros/humble/setup.bash" >> ~/.bashrc \    
     && echo "export RCUTILS_COLORIZED_OUTPUT=1" >> ~/.bashrc \
     && touch ~/.hushlogin \
     && mkdir -p /home/${LABNAME}/.ssh \

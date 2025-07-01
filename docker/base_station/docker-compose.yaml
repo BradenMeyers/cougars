@@ -2,9 +2,9 @@
 
 services:
   cougars:
-    image: frostlab/cougars:vehicle
+    image: frostlab/cougars:base_station
     build: .
-    container_name: cougars
+    container_name: cougars_base
     user: frostlab
     network_mode: host
     privileged: true

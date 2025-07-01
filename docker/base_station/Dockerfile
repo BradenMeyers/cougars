@@ -1,7 +1,8 @@
+FROM frostlab/cougars:vehicle
+
 # Install development dependencies (rqt, plotjuggler, documentation, etc.)
 USER root
-RUN if [ "$TARGETARCH" = "amd64" ]; then \
-    apt update && apt install -y \
+RUN apt update && apt install -y \
     libx11-dev \
     libxext-dev \
     libxrender-dev \
@@ -12,16 +13,21 @@ RUN if [ "$TARGETARCH" = "amd64" ]; then \
     gir1.2-gtk-3.0 \
     x11-apps \
     ros-humble-rqt* \
-    ros-humble-plotjuggler-ros \
     ros-humble-rviz2 \
     python3-rosdoc2 \
+    libxcb-cursor0 \
+    fonts-noto-color-emoji \
+    iputils-ping \
     && apt clean \
-    && rm -rf /var/lib/apt/lists/*; \
-    fi
-USER ${LABNAME}
-
-
+    && rm -rf /var/lib/apt/lists/*
+    
+    
 # Install development Python dependencies
-RUN if [ "$TARGETARCH" = "amd64" ]; then \
-    pip3 install --no-cache-dir PyQt5; \
-    fi
+RUN pip3 install --no-cache-dir \
+    PyQt6 \
+    graphviz \
+    transforms3d \
+    tkintermapview
+
+
+USER ${LABNAME}
