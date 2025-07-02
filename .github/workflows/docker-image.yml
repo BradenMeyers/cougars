@@ -10,10 +10,24 @@ on:
     paths: 
       - "docker/**"
   workflow_dispatch:
+    inputs:
+      build_vehicle:
+        description: "Build the vehicle image"
+        required: false
+        default: "true"
+        type: choice
+        options: ["true", "false"]
+      build_base_station:
+        description: "Build the base station image"
+        required: false
+        default: "true"
+        type: choice
+        options: ["true", "false"]
 
 jobs:
 
   docker_vehicle:
+    if: github.event_name != 'workflow_dispatch' || inputs.build_vehicle == 'true'
     runs-on: ubuntu-latest
 
     steps:
@@ -42,7 +56,8 @@ jobs:
         tags: ${{ secrets.DOCKERHUB_USERNAME }}/cougars:vehicle
 
   docker_base_station:
-    needs: docker_vehicle
+    if: github.event_name != 'workflow_dispatch' || inputs.build_base_station == 'true'
+    needs: ${{ github.event_name != 'workflow_dispatch' || inputs.build_vehicle == 'true' && 'docker_vehicle' || '' }}
     runs-on: ubuntu-latest
 
     steps:
@@ -66,6 +81,6 @@ jobs:
       uses: docker/build-push-action@v6
       with:
         context: docker/base_station
-        platforms: linux/amd64,linux/arm64
+        platforms: linux/amd64
         push: ${{ github.event_name == 'push' || github.event_name == 'workflow_dispatch' }}
         tags: ${{ secrets.DOCKERHUB_USERNAME }}/cougars:base_station
