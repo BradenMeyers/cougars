@@ -66,6 +66,6 @@ jobs:
       uses: docker/build-push-action@v6
       with:
         context: docker/base_station
-        platforms: linux/amd64,linux/arm64
+        platforms: linux/amd64
         push: ${{ github.event_name == 'push' || github.event_name == 'workflow_dispatch' }}
         tags: ${{ secrets.DOCKERHUB_USERNAME }}/cougars:base_station
