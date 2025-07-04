@@ -15,6 +15,9 @@ RUN mkdir build && cd build && \
     make -j$(nproc) && make install && ldconfig
 
 
+# Dependency for i2c pressure sensors
+RUN pip3 install smbus2 --no-cache-dir
+
 # Create i2c group with typical GID (if needed)
 RUN groupadd -f -g 994 i2c && usermod -aG i2c frostlab
     
