@@ -8,6 +8,9 @@ services:
     user: frostlab
     network_mode: host
     privileged: true
+    environment:
+      DISPLAY: $DISPLAY # Required for GUI applications
+      MPLBACKEND: Qt5Agg # Required for GUI applications
     volumes:
       - ../../bag:/home/frostlab/bag:rw
       - ../../config:/home/frostlab/config:rw
