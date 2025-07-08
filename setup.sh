@@ -127,6 +127,7 @@ else
   git clone $CLONE_PREFIX/cougars-docs.git
   git clone $CLONE_PREFIX/cougars-base-station.git
   sudo chmod a+w -R cougars-docs cougars-base-station
+  sudo chmod a+w -R .ssh_keys 
 
   ### END DEV-SPECIFIC SETUP ###
 
