@@ -1,88 +1,106 @@
 #!/bin/bash
-# Created by Nelson Durrant, Sep 2024
-#
-# Starts or enters the tmux session
-# - Use 'bash tmux.sh kill' to kill the session
+# Enhanced tmux session script with flexible windows
+# Created by Braden Meyers, Jul 2025
 
 source config/cougarsrc.sh
 
-case $1 in
-  "kill")
-    printWarning "Killing the tmux session..."
-    tmux kill-session -t cougars
-    ;;
-  *)
-    # Check if the tmux session is already running
-    if [ -z "$(tmux list-sessions | grep cougars)" ]; then
+SESSION="cougars"
+ADD_BASE=false
+ADD_SIM=false
 
-      printInfo "Starting the tmux session..."
+# Parse arguments
+while getopts ":abs" opt; do
+  case $opt in
+    a)
+      ADD_BASE=true
+      ADD_SIM=true
+      ;;
+    b)
+      ADD_BASE=true
+      ;;
+    s)
+      ADD_SIM=true
+      ;;
+    *)
+      echo "Usage: $0 [-a] [-b] [-s] | kill"
+      exit 1
+      ;;
+  esac
+done
 
-      ### FIRST WINDOW - ROS SCRIPTS ###
+# Shift out processed flags
+shift $((OPTIND -1))
 
-      # Start the tmux session
-      tmux new-session -d -s cougars -n "coug"
-      tmux split-window -h -t cougars
-      tmux split-window -v -t cougars
-      tmux select-pane -t cougars:coug.0
-      tmux split-window -v -t cougars
-      tmux select-pane -t cougars:coug.0
+# Handle kill case
+if [ "$1" == "kill" ]; then
+  printWarning "Killing the tmux session..."
+  tmux kill-session -t $SESSION
+  exit 0
+fi
 
-      # Send commands to the tmux session
-      tmux send-keys -t cougars:coug.0 "echo 'frostlab' | sudo -S systemctl restart chrony" ENTER
+# Start session only if not already running
+if ! tmux has-session -t $SESSION 2>/dev/null; then
+  printInfo "Creating tmux session: $SESSION"
 
-      tmux send-keys -t cougars:coug.0 "bash compose.sh" ENTER
-      tmux send-keys -t cougars:coug.0 "clear" ENTER
-      tmux send-keys -t cougars:coug.1 "bash compose.sh" ENTER
-      tmux send-keys -t cougars:coug.1 "clear" ENTER
-      tmux send-keys -t cougars:coug.2 "bash compose.sh" ENTER
-      tmux send-keys -t cougars:coug.2 "clear" ENTER
-      tmux send-keys -t cougars:coug.3 "bash compose.sh" ENTER
-      tmux send-keys -t cougars:coug.3 "clear" ENTER
+  #### WINDOW 1 - coug (default window) ####
+  tmux new-session -d -s $SESSION -n "coug"
 
-      tmux send-keys -t cougars:coug.0 "cd ~/ros2_ws" ENTER
-      tmux send-keys -t cougars:coug.0 "bash launch.sh <mission_type>" # Don't start just yet
+  # Create a 2x2 grid of panes
+  tmux split-window -h -t $SESSION:coug.0
+  tmux split-window -v -t $SESSION:coug.0
+  tmux split-window -v -t $SESSION:coug.2
+  tmux select-pane -t $SESSION:coug.0
 
-      tmux send-keys -t cougars:coug.1 "cd ~/ros2_ws" ENTER
-      tmux send-keys -t cougars:coug.1 "bash test.sh <acoustics>" # Don't start just yet
+  # Enter the cougars docker container in each pane
+  tmux send-keys -t $SESSION:coug.0 "docker exec -it cougars bash" C-m
+  tmux send-keys -t $SESSION:coug.1 "docker exec -it cougars bash" C-m
+  tmux send-keys -t $SESSION:coug.2 "docker exec -it cougars bash" C-m
+  tmux send-keys -t $SESSION:coug.3 "docker exec -it cougars bash" C-m
 
-      tmux send-keys -t cougars:coug.2 "cd ~/ros2_ws" ENTER
-      tmux send-keys -t cougars:coug.2 "bash record.sh <acoustics>" # Don't start just yet
+  # Run the relevant commands inside the container
+  tmux send-keys -t $SESSION:coug.0 "clear" C-m
+  tmux send-keys -t $SESSION:coug.0 "cd ~/ros2_ws && bash launch.sh <mission_type>" 
 
-      tmux send-keys -t cougars:coug.3 "cd ~/config" ENTER
-      tmux send-keys -t cougars:coug.3 "cat $VEHICLE_PARAMS_FILE" ENTER
+  tmux send-keys -t $SESSION:coug.1 "clear" C-m
+  tmux send-keys -t $SESSION:coug.1 "cd ~/ros2_ws && bash test.sh <acoustics>" 
 
-      ### SECOND WINDOW - MOOS SCRIPTS ###
+  tmux send-keys -t $SESSION:coug.2 "clear" C-m
+  tmux send-keys -t $SESSION:coug.2 "cd ~/ros2_ws && bash record.sh <acoustics>" 
 
-      tmux new-window -t cougars -n "moos"
-      tmux split-window -h -t cougars:moos
-      tmux select-pane -t cougars:moos.0
-      tmux split-window -v -t cougars:moos.0
+  tmux send-keys -t $SESSION:coug.3 "clear" C-m
+  tmux send-keys -t $SESSION:coug.3 "cd ~/config && cat \$VEHICLE_PARAMS_FILE" C-m
 
-      tmux send-keys -t cougars:moos.0 "bash compose.sh" ENTER
-      tmux send-keys -t cougars:moos.0 "clear" ENTER
-      tmux send-keys -t cougars:moos.1 "bash compose.sh" ENTER
-      tmux send-keys -t cougars:moos.1 "clear" ENTER
-      tmux send-keys -t cougars:moos.2 "bash compose.sh" ENTER
-      tmux send-keys -t cougars:moos.2 "clear" ENTER
+  #### Optional: WINDOW 2 - base ####
+  if [ "$ADD_BASE" = true ]; then
+    tmux new-window -t $SESSION -n "base"
+    # tmux split-window -v -t $SESSION:base
+    tmux send-keys -t $SESSION:base.0 "docker exec -it cougars_base bash" C-m
+    tmux send-keys -t $SESSION:base.0 "cd base_station/base-station-ros2 && source install/setup.bash" C-m
+    # tmux send-keys -t $SESSION:base.1 "docker exec -it cougars_base bash" C-m
 
-      tmux send-keys -t cougars:moos.0 "date" ENTER
+    tmux send-keys -t $SESSION:base.0 "clear" C-m
+    # tmux send-keys -t $SESSION:base.1 "clear" C-m
+    
+    tmux send-keys -t $SESSION:base.0 "ros2 launch launch/terminal_launch.py"
+  fi
 
-      tmux send-keys -t cougars:moos.1 "cat ~/ros2_ws/moos_tools/coug.bhv" ENTER
-      tmux send-keys -t cougars:moos.1 "bash ~/ros2_ws/moos_tools/mission_deploy.sh" # Don't start just yet
-      
+  #### Optional: WINDOW 3 - sim ####
+  if [ "$ADD_SIM" = true ]; then
+    tmux new-window -t $SESSION -n "sim"
+    # tmux split-window -h -t $SESSION:sim
+    tmux send-keys -t $SESSION:sim.0 "docker exec -it cougars-sim-holoros bash" C-m
+    # tmux send-keys -t $SESSION:sim.1 "docker exec -it cougars-sim-holoros bash" C-m
 
-      tmux send-keys -t cougars:moos.2 "cd ~/ros2_ws/moos_tools" ENTER
-      tmux send-keys -t cougars:moos.2 "timeout 120s pAntler coug.moos" # Don't start just yet
+    tmux send-keys -t $SESSION:sim.0 "cd ~/sim_ws && source setup.bash" C-m
+    
+    tmux send-keys -t $SESSION:sim.0 "clear" C-m
+    # tmux send-keys -t $SESSION:sim.1 "clear" C-m
+    
+    tmux send-keys -t $SESSION:sim.0 "ros2 launch reverse_converters full_launch.py params_file:=/home/ue4/config/ros_params.yaml" 
+  fi
+else
+  printInfo "Attaching to existing tmux session: $SESSION"
+fi
 
-
-    else
-      printInfo "Attaching to the tmux session..."
-    fi
-
-    # Attach to the tmux session
-    tmux attach-session -t cougars
-    ;;
-esac
-
-#TODO: - do we need to add init scripts at all?
-#      - can we implement plot juggler?
+# Attach to the session
+tmux attach -t $SESSION
