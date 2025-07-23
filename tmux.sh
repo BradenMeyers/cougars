@@ -96,7 +96,7 @@ if ! tmux has-session -t $SESSION 2>/dev/null; then
     tmux send-keys -t $SESSION:sim.0 "clear" C-m
     # tmux send-keys -t $SESSION:sim.1 "clear" C-m
     
-    tmux send-keys -t $SESSION:sim.0 "ros2 launch reverse_converters full_launch.py params_file:=/home/ue4/config/ros_params.yaml" 
+    tmux send-keys -t $SESSION:sim.0 "ros2 launch reverse_converters full_launch.py params_file:=/home/ue4/sim_config/ros_params.yaml" 
   fi
 else
   printInfo "Attaching to existing tmux session: $SESSION"
