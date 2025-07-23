@@ -50,6 +50,9 @@ coug0: # Change this to match the vehicle name
       monitor_leak: false
       monitor_low_battery: false
       monitor_depth: false
+      monitor_gps_sats: false
+      monitor_modem_timeout: false
+      monitor_dvl_timeout: false
 
   coug_kinematics:
     ros__parameters:
