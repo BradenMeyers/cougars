@@ -73,15 +73,20 @@ if ! tmux has-session -t $SESSION 2>/dev/null; then
   #### Optional: WINDOW 2 - base ####
   if [ "$ADD_BASE" = true ]; then
     tmux new-window -t $SESSION -n "base"
-    # tmux split-window -v -t $SESSION:base
+    tmux split-window -v -t $SESSION:base
+    tmux split-window -h -t $SESSION:base.1
     tmux send-keys -t $SESSION:base.0 "docker exec -it cougars_base bash" C-m
     tmux send-keys -t $SESSION:base.0 "cd base_station/base-station-ros2 && source install/setup.bash" C-m
-    # tmux send-keys -t $SESSION:base.1 "docker exec -it cougars_base bash" C-m
+    tmux send-keys -t $SESSION:base.1 "docker exec -it cougars_base bash" C-m
+    tmux send-keys -t $SESSION:base.2 "docker exec -it cougars_base bash" C-m
 
     tmux send-keys -t $SESSION:base.0 "clear" C-m
-    # tmux send-keys -t $SESSION:base.1 "clear" C-m
-    
+    tmux send-keys -t $SESSION:base.1 "clear" C-m
+    tmux send-keys -t $SESSION:base.2 "clear" C-m
+
     tmux send-keys -t $SESSION:base.0 "ros2 launch launch/terminal_launch.py"
+    tmux send-keys -t $SESSION:base.1 "ros2 run plotjuggler plotjuggler" 
+    tmux send-keys -t $SESSION:base.2 "cd ~/base_station/mission_control && bash sync_bags.sh" 
   fi
 
   #### Optional: WINDOW 3 - sim ####
