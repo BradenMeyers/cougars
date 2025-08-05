@@ -59,10 +59,10 @@ if ! tmux has-session -t $SESSION 2>/dev/null; then
 
   # Run the relevant commands inside the container
   tmux send-keys -t $SESSION:coug.0 "clear" C-m
-  tmux send-keys -t $SESSION:coug.0 "cd ~/ros2_ws && bash launch.sh <mission_type>" 
+  tmux send-keys -t $SESSION:coug.0 "bash scripts/launch.sh <mission_type>" 
 
   tmux send-keys -t $SESSION:coug.1 "clear" C-m
-  tmux send-keys -t $SESSION:coug.1 "cd ~/ros2_ws && bash test.sh <acoustics>" 
+  tmux send-keys -t $SESSION:coug.1 "bash scripts/test.sh <acoustics>" 
 
   # tmux send-keys -t $SESSION:coug.2 "clear" C-m
   # tmux send-keys -t $SESSION:coug.2 "cd ~/ros2_ws && bash record.sh <acoustics>" 
