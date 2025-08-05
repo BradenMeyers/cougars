@@ -9,5 +9,7 @@ docker pull frostlab/cougars:base_station
 
 vcs pull ros2_ws/src
 
+vcs pull cougars-teensy cougars-gpio cougars-base-station cougars-docs
+
 
 
