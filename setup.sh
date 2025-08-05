@@ -141,6 +141,12 @@ unset LC_ALL
 
 vcs import < .vcs/runtime.repos
 
+mkdir -p ros2_ws/src
+vcs import < .vcs/ros2.repos ros2_ws/src
+cd ros2_ws/src/dvl-a50 
+git submodule update --init --recursive
+cd ../../..
+
 printInfo "Make sure to update the vehicle-specific configuration files in "config" now"
 
 # TODO add the prompt to ask if the user wants to do this
