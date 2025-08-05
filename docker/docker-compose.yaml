@@ -19,7 +19,7 @@ services:
       # - ../../sim-packages:/home/ue4/ros2_ws/src
       # - ~/.local/share/holoocean:/home/ue4/.local/share/holoocean
       - /dev:/dev
-      - ../cougars-ros2:/home/ue4/coug_ros2
+      - ../ros2_ws:/home/ue4/coug_ros2
       - ../cougars-base-station/sim/holo-translator:/home/ue4/sim_ws/src/holo-translator
       - ../cougars-base-station/sim/config:/home/ue4/sim_config
       - ../config:/home/ue4/config
@@ -37,7 +37,7 @@ services:
     volumes:
       - ../bag:/home/frostlab/bag:rw
       - ../config:/home/frostlab/config:rw
-      - ../cougars-ros2:/home/frostlab/ros2_ws
+      - ../ros2_ws:/home/frostlab/ros2_ws
       - ../cougars-teensy:/home/frostlab/teensy_ws
       - ../cougars-gpio:/home/frostlab/gpio
       - ../scripts:/home/frostlab/scripts
@@ -61,7 +61,7 @@ services:
     volumes:
       - ../bag:/home/frostlab/bag:rw
       - ../config:/home/frostlab/config:rw
-      - ../cougars-ros2:/home/frostlab/ros2_ws
+      - ../ros2_ws:/home/frostlab/ros2_ws
       - ../cougars-teensy:/home/frostlab/teensy_ws
       - ../cougars-gpio:/home/frostlab/gpio
       - ../scripts:/home/frostlab/scripts
