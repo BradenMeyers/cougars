@@ -16,40 +16,51 @@ else
     # Add alias to .bashrc if it doesn't exist
     printInfo "Setting 'coug' as an alias to enter the CoUGARs docker container"
     echo "alias coug='docker exec -it cougars bash'" >> ~/.bashrc
-
+fi
 
 # Check if the NAMESPACE variable is set
 if [ -z "$NAMESPACE" ]; then
     # TODO have the user choose a vehicle name (e.g., coug, coug-rt, etc.)
     read -p "Enter a name for your vehicle (e.g., coug, bluerov, etc.): " vehicle_name
     echo "You have chosen '$vehicle_name' as your vehicle name."
+    read -p "Choose a number for your vehicle (e.g., 1, 2, etc.): " vehicle_number
+    echo "You have chosen '$vehicle_number' as your vehicle number."
+
+    NAMESPACE="${vehicle_name}${vehicle_number}"
+    printInfo "Using new vehicle namespace: $NAMESPACE"
 
 else
     vehicle_name="$NAMESPACE"
     printInfo "Using existing vehicle namespace: $vehicle_name"
 fi
 
-# Ask user for clone method choice: HTTPS or SSH
-echo "Choose cloning method for repositories:"
-echo "1) SSH"
-echo "2) HTTPS"
-read -p "Enter the number of your choice [1 or 2]: " clone_method
+# # Ask user for clone method choice: HTTPS or SSH
+# echo "Choose cloning method for repositories:"
+# echo "1) SSH"
+# echo "2) HTTPS"
+# read -p "Enter the number of your choice [1 or 2]: " clone_method
 
-if [ "$clone_method" -eq 1 ]; then
-    CLONE_PREFIX="git@github.com:BYU-FRoSt-Lab"
-    printInfo "Cloning using SSH"
-elif [ "$clone_method" -eq 2 ]; then
-    CLONE_PREFIX="https://github.com/BYU-FRoSt-Lab"
-    printInfo "Cloning using HTTPS"
-else
-    printError "Invalid choice. Defaulting to SSH."
-    CLONE_PREFIX="git@github.com:BYU-FRoSt-Lab"
-fi
+# if [ "$clone_method" -eq 1 ]; then
+#     CLONE_PREFIX="git@github.com:BYU-FRoSt-Lab"
+#     printInfo "Cloning using SSH"
+# elif [ "$clone_method" -eq 2 ]; then
+#     CLONE_PREFIX="https://github.com/BYU-FRoSt-Lab"
+#     printInfo "Cloning using HTTPS"
+# else
+#     printError "Invalid choice. Defaulting to SSH."
+#     CLONE_PREFIX="git@github.com:BYU-FRoSt-Lab"
+# fi
 
 
 # Install common dependencies
 printInfo "Do you want to install vim, tmux, git, and mosh"
-sudo apt install vim tmux git mosh
+read -p "Install common dependencies? (y/n): " install_deps
+if [[ "$install_deps" == "y" || "$install_deps" == "Y" ]]; then
+    printInfo "Installing common dependencies: vim, tmux, git, and mosh"
+    sudo apt install vim tmux git mosh
+else
+    printWarning "Skipping installation of common dependencies"
+fi
 
 # Set up bag directory
 if [ -d "bag" ]; then
@@ -103,14 +114,15 @@ if [ "$(uname -m)" == "aarch64" ]; then
       sudo udevadm trigger
   fi
 else 
-  ### START DEV-SPECIFIC SETUP ###
+    ### START DEV-SPECIFIC SETUP ###
 
-  # Copy repos from GitHub
-  git clone $CLONE_PREFIX/cougars-base-station.git
-  sudo chmod a+w -R cougars-base-station
-  sudo chmod a+w -R .ssh_keys 
+    # Set up vcs and clone repos
+    vcs import < .vcs/dev.repos
 
-  ### END DEV-SPECIFIC SETUP ###
+    sudo chmod a+w -R cougars-base-station
+    sudo chmod a+w -R .ssh_keys 
+
+    ### END DEV-SPECIFIC SETUP ###
 
 fi
 
@@ -122,14 +134,12 @@ if [[ "$copy_tmux_config" == "y" || "$copy_tmux_config" == "Y" ]]; then
     printInfo "Copied the tmux config file to ~/.tmux.conf"
     tmux source-file ~/.tmux.conf
 
-
+fi
 # Get rid of utf8 error
 unset LC_ALL
 
-# Copy repos from GitHub
-git clone $CLONE_PREFIX/cougars-ros2.git
-git clone $CLONE_PREFIX/cougars-teensy.git
-git clone $CLONE_PREFIX/cougars-gpio.git
+
+vcs import < .vcs/runtime.repos
 
 printInfo "Make sure to update the vehicle-specific configuration files in "config" now"
 
