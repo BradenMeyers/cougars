@@ -148,4 +148,5 @@ sudo chmod a+w -R cougars-ros2 cougars-teensy cougars-gpio
 
 # Pull the latest Docker images
 printInfo "Pulling the latest Docker images for CoUGARs"
+bash scripts/setup_ros2.sh
 bash scripts/update.sh
