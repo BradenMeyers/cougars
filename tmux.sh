@@ -84,11 +84,17 @@ if ! tmux has-session -t $SESSION 2>/dev/null; then
     # SSH into IP address in a new pane if provided
     if [ -n "$SSH_IP" ]; then
       tmux send-keys -t $SESSION:sim.0 "ssh -Y ue4@$SSH_IP -p 2233" C-m
+      # Fast Discovery Server
+      tmux split-window -h -t $SESSION:sim
+      tmux send-keys -t $SESSION:sim.1 "ssh ue4@$SSH_IP -p 2233" C-m
+      tmux send-keys -t $SESSION:sim.1 "fastdds discovery --server-id 0" C-m
+    else
+      tmux send-keys -t $SESSION:sim.0 "docker exec -it cougars-sim-holoros bash" C-m
     fi
-    tmux send-keys -t $SESSION:sim.0 "docker exec -it cougars-sim-holoros bash" C-m
     tmux send-keys -t $SESSION:sim.0 "cd ~/sim_ws && source setup.bash" C-m
     tmux send-keys -t $SESSION:sim.0 "clear" C-m
     tmux send-keys -t $SESSION:sim.0 "ros2 launch sim_converters full_launch.py params_file:=/home/ue4/sim_config/ros_params.yaml"
+
 
   fi
 else
