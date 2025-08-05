@@ -2,11 +2,11 @@ repositories:
   cougars_main:
     type: git
     url: git@github.com:BYU-FRoSt-Lab/cougars-ros2.git
-    version: dev
+    version: cougars-cleanup
 
   seatrac:
     type: git
-    url: git@github.com:BYU-FRoSt-Lab/seatrac_interfaces.git
+    url: git@github.com:BYU-FRoSt-Lab/seatrac-ros2.git
     version: main
 
   dvl_msgs:

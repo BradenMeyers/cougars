@@ -7,5 +7,7 @@ source config/cougarsrc.sh
 docker pull frostlab/cougars:vehicle
 docker pull frostlab/cougars:base_station
 
+vcs pull ros2_ws/src
+
 
 
