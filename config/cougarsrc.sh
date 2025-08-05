@@ -1,7 +1,6 @@
 #!/bin/bash
 # cougarsrc bashrc type script that will be sourced in every terminal that is general for every vehicle
 #
-export LABNAME='frostlab'
 
 source /opt/ros/humble/setup.bash
 source ~/ros2_ws/install/setup.bash

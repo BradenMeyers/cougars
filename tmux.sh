@@ -47,15 +47,15 @@ if ! tmux has-session -t $SESSION 2>/dev/null; then
 
   # Create a 2x2 grid of panes
   tmux split-window -h -t $SESSION:coug.0
-  tmux split-window -v -t $SESSION:coug.0
-  tmux split-window -v -t $SESSION:coug.2
+  # tmux split-window -v -t $SESSION:coug.0
+  # tmux split-window -v -t $SESSION:coug.2
   tmux select-pane -t $SESSION:coug.0
 
   # Enter the cougars docker container in each pane
   tmux send-keys -t $SESSION:coug.0 "docker exec -it cougars bash" C-m
   tmux send-keys -t $SESSION:coug.1 "docker exec -it cougars bash" C-m
-  tmux send-keys -t $SESSION:coug.2 "docker exec -it cougars bash" C-m
-  tmux send-keys -t $SESSION:coug.3 "docker exec -it cougars bash" C-m
+  # tmux send-keys -t $SESSION:coug.2 "docker exec -it cougars bash" C-m
+  # tmux send-keys -t $SESSION:coug.3 "docker exec -it cougars bash" C-m
 
   # Run the relevant commands inside the container
   tmux send-keys -t $SESSION:coug.0 "clear" C-m
@@ -64,11 +64,11 @@ if ! tmux has-session -t $SESSION 2>/dev/null; then
   tmux send-keys -t $SESSION:coug.1 "clear" C-m
   tmux send-keys -t $SESSION:coug.1 "cd ~/ros2_ws && bash test.sh <acoustics>" 
 
-  tmux send-keys -t $SESSION:coug.2 "clear" C-m
-  tmux send-keys -t $SESSION:coug.2 "cd ~/ros2_ws && bash record.sh <acoustics>" 
+  # tmux send-keys -t $SESSION:coug.2 "clear" C-m
+  # tmux send-keys -t $SESSION:coug.2 "cd ~/ros2_ws && bash record.sh <acoustics>" 
 
-  tmux send-keys -t $SESSION:coug.3 "clear" C-m
-  tmux send-keys -t $SESSION:coug.3 "cd ~/config && cat \$VEHICLE_PARAMS_FILE" C-m
+  # tmux send-keys -t $SESSION:coug.3 "clear" C-m
+  # tmux send-keys -t $SESSION:coug.3 "cd ~/config && cat \$VEHICLE_PARAMS_FILE" C-m
 
   #### Optional: WINDOW 2 - base ####
   if [ "$ADD_BASE" = true ]; then
@@ -101,7 +101,7 @@ if ! tmux has-session -t $SESSION 2>/dev/null; then
     tmux send-keys -t $SESSION:sim.0 "clear" C-m
     # tmux send-keys -t $SESSION:sim.1 "clear" C-m
     
-    tmux send-keys -t $SESSION:sim.0 "ros2 launch reverse_converters full_launch.py params_file:=/home/ue4/sim_config/ros_params.yaml" 
+    tmux send-keys -t $SESSION:sim.0 "ros2 launch sim_converters full_launch.py params_file:=/home/ue4/sim_config/ros_params.yaml" 
   fi
 else
   printInfo "Attaching to existing tmux session: $SESSION"
