@@ -87,7 +87,7 @@ if ! tmux has-session -t $SESSION 2>/dev/null; then
       # Fast Discovery Server
       tmux split-window -h -t $SESSION:sim
       tmux send-keys -t $SESSION:sim.1 "ssh ue4@$SSH_IP -p 2233" C-m
-      tmux send-keys -t $SESSION:sim.1 "fastdds discovery --server-id 0" C-m
+      tmux send-keys -t $SESSION:sim.1 "bash ~/scripts/start_discovery_server.sh" C-m
     else
       tmux send-keys -t $SESSION:sim.0 "docker exec -it cougars-sim-holoros bash" C-m
     fi
