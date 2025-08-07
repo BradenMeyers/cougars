@@ -1,6 +1,6 @@
 services:
   
-  holoros-sim:
+  holoros_sim:
     image: frostlab/cougars:sim-holoros-cuda12.4
     build: ../cougars-base-station/sim/docker/runtime
     container_name: cougars-sim-holoros
@@ -49,7 +49,7 @@ services:
     entrypoint: /home/frostlab/entrypoint.sh
     restart: always  # Optional: Keeps the container running after exit unless you want it to be removed like with --rm
 
-  cougars-base:
+  cougars_base:
     image: frostlab/cougars:base_station
     build: ./base_station
     container_name: cougars_base
