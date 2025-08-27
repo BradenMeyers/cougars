@@ -32,6 +32,8 @@ RUN useradd -ms /bin/bash ${LABNAME} \
     && echo "${LABNAME}:${LABNAME}" | chpasswd \
     && echo '%sudo ALL=(ALL) NOPASSWD:ALL' >> /etc/sudoers
 
+# TEMP Workaround for libc-bin segfault in QEMU
+RUN apt-get update && apt-get install -y --fix-missing libc-bin
 
 RUN curl https://download.koromix.dev/debian/koromix-archive-keyring.gpg -o /etc/apt/keyrings/koromix-archive-keyring.gpg \
     && echo "deb [signed-by=/etc/apt/keyrings/koromix-archive-keyring.gpg] https://download.koromix.dev/debian stable main" > /etc/apt/sources.list.d/koromix.dev-stable.list \
