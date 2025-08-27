@@ -138,6 +138,7 @@ fi
 # Get rid of utf8 error
 unset LC_ALL
 
+bash scripts/utils/copy_templates.sh
 
 vcs import < .vcs/runtime.repos
 
