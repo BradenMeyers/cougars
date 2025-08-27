@@ -120,7 +120,7 @@ else
     vcs import < .vcs/dev.repos
 
     sudo chmod a+w -R cougars-base-station
-    sudo chmod a+w -R .ssh_keys 
+    sudo chmod a+w -R .ssh_keys
 
     ### END DEV-SPECIFIC SETUP ###
 
@@ -151,7 +151,7 @@ cd ../../..
 printInfo "Make sure to update the vehicle-specific configuration files in "config" now"
 
 # TODO add the prompt to ask if the user wants to do this
-sudo chmod a+w -R ros2_ws cougars-teensy cougars-gpio
+sudo chmod a+w -R ros2_ws cougars-teensy cougars-gpio bag
 
 # Pull the latest Docker images
 printInfo "Pulling the latest Docker images for CoUGARs"
