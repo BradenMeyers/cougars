@@ -24,6 +24,7 @@ services:
       - ../cougars-base-station/sim/config:/home/ue4/sim_config
       - ../config:/home/ue4/config
       - ../cougars-base-station/sim/docker/runtime/entrypoint.sh:/home/ue4/entrypoint.sh
+      - ../scripts:/home/ue4/scripts
     entrypoint: ["/bin/bash", "/home/ue4/entrypoint.sh"]
     restart: always  # Optional: Keeps the container running after exit unless you want it to be removed like with --rm
 
