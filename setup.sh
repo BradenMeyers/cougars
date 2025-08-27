@@ -5,7 +5,7 @@
 # - This script can also be used to set up a new development environment on a personal machine
 # - Make sure you run this from the root of the top-level repo
 
-source config/cougarsrc.sh
+source scripts/utils/print.sh
 
 echo "This script should be run from the root of the CoUGARS directory"
 
@@ -138,11 +138,12 @@ fi
 # Get rid of utf8 error
 unset LC_ALL
 
+bash scripts/utils/copy_templates.sh
 
 vcs import < .vcs/runtime.repos
 
 mkdir -p ros2_ws/src
-vcs import < .vcs/ros2.repos ros2_ws/src
+vcs import < .vcs/cougars_ros2.repos ros2_ws/src
 cd ros2_ws/src/dvl-a50 
 git submodule update --init --recursive
 cd ../../..
@@ -150,7 +151,7 @@ cd ../../..
 printInfo "Make sure to update the vehicle-specific configuration files in "config" now"
 
 # TODO add the prompt to ask if the user wants to do this
-sudo chmod a+w -R cougars-ros2 cougars-teensy cougars-gpio
+sudo chmod a+w -R ros2_ws cougars-teensy cougars-gpio
 
 # Pull the latest Docker images
 printInfo "Pulling the latest Docker images for CoUGARs"
