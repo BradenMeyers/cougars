@@ -109,6 +109,7 @@ RUN apt update && apt install -y \
     tmux \
     ros-humble-gps-msgs \
     ros-humble-gpsd-client \
+    ros-humble-diagnostics \
     && rm -rf /var/lib/apt/lists/*
 
 USER ${LABNAME}
