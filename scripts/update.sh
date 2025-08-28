@@ -14,6 +14,18 @@ if [ $FORCE -eq 1 ]; then
     echo "Force flag set: cleaning ros2_ws and other directories"
     rm -rf ros2_ws/src
     rm -rf cougars-teensy cougars-gpio cougars-base-station cougars-docs
+    mkdir -p ros2_ws/src
+
+    vcs import < .vcs/runtime.repos
+
+    mkdir -p ros2_ws/src
+    vcs import < .vcs/cougars.ros2.repos ros2_ws/src
+    cd ros2_ws/src/dvl-a50 
+    git submodule update --init --recursive
+    cd ../../..
+
+    # Set up vcs and clone repos
+    vcs import < .vcs/dev.repos
 fi
 
 
@@ -21,8 +33,6 @@ fi
 # Docker updates
 docker pull frostlab/cougars:vehicle
 docker pull frostlab/cougars:base_station
-
-mkdir -p ros2_ws/src
 
 vcs pull ros2_ws/src
 

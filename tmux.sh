@@ -1,7 +1,7 @@
 #!/bin/bash
 # Enhanced tmux session script with flexible windows and SSH option
 
-source config/cougarsrc.sh
+source scripts/utils/print.sh
 
 SESSION="cougars"
 ADD_BASE=false
