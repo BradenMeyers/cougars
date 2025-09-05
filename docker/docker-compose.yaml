@@ -31,7 +31,7 @@ services:
 
   cougars:
     image: frostlab/cougars:vehicle
-    build: ./vehicle
+    build: ./vehicle/dev
     container_name: cougars
     user: frostlab
     network_mode: host
