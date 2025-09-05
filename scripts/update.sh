@@ -32,11 +32,17 @@ fi
 
 # Docker updates
 docker pull frostlab/cougars:vehicle
-docker pull frostlab/cougars:base_station
+if [ "$(uname -m)" == "aarch64" ]; then
+    printInfo "Will not pull base station image on ARM architecture"
+else
+    printInfo "Pulling base station image"
+    docker pull frostlab/cougars:base_station
+    vcs pull cougars-base-station cougars-docs
+fi
 
+vcs pull cougars-teensy cougars-gpio 
 vcs pull ros2_ws/src
 
-vcs pull cougars-teensy cougars-gpio cougars-base-station cougars-docs
 
 
 

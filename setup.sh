@@ -170,3 +170,25 @@ sudo chmod a+w -R ros2_ws cougars-teensy cougars-gpio bag
 # Pull the latest Docker images
 printInfo "Pulling the latest Docker images for CoUGARs"
 bash scripts/update.sh
+
+
+## Would you like to start the docker containers?
+# TODO: Need to fix this to check what conatiners are available based on architecture
+read -p "Do you want to start the docker containers now? (y/n): " start_docker
+if [[ "$start_docker" == "y" || "$start_docker" == "Y" ]]; then
+    printInfo "Starting the docker containers"
+    docker compose -f docker/docker-compose.yaml up -d
+    printInfo "Docker containers started"
+    printInfo "You can enter the main CoUGARs container by running 'coug'"
+else
+    printWarning "Skipping starting the docker containers"
+fi
+
+## Would you like to build the workspaces now?
+read -p "Do you want to build the workspaces now? (y/n): " build_now
+if [[ "$build_now" == "y" || "$build_now" == "Y" ]]; then
+    printInfo "Building the workspaces now"
+    bash scripts/build.sh
+else
+    printWarning "Skipping building the workspaces"
+fi
