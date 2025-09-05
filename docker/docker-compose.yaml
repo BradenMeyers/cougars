@@ -1,9 +1,9 @@
 services:
   
-  holoros_sim:
+  cougars_sim:
     image: frostlab/cougars:sim-holoros-cuda12.4
     build: ../cougars-base-station/sim/docker/runtime
-    container_name: cougars-sim-holoros
+    container_name: cougars_sim
     user: ue4
     runtime: nvidia
     network_mode: host

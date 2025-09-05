@@ -12,4 +12,5 @@ docker exec -it cougars bash -c "source /opt/ros/humble/setup.bash && cd ~/ros2_
 
 docker exec -it cougars_base bash -c "source ~/ros2_ws/install/setup.bash && cd ~/base_station/base-station-ros2 && bash colcon_build.sh"
 
-docker exec -it cougars_sim bash -c "source ~/sim_ws/setup.bash && cd ~/sim_ws && colcon build"
+# Need the true because the first command fails when it can't source the workspace. Could be fixed in the setup.bash file
+docker exec -it cougars_sim bash -c "source ~/sim_ws/setup.bash || true; cd ~/sim_ws && colcon build"
