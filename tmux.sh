@@ -89,7 +89,7 @@ if ! tmux has-session -t $SESSION 2>/dev/null; then
       tmux send-keys -t $SESSION:sim.1 "ssh ue4@$SSH_IP -p 2233" C-m
       tmux send-keys -t $SESSION:sim.1 "bash ~/scripts/start_discovery_server.sh" C-m
     else
-      tmux send-keys -t $SESSION:sim.0 "docker exec -it cougars-sim-holoros bash" C-m
+      tmux send-keys -t $SESSION:sim.0 "docker exec -it cougars_sim bash" C-m
     fi
     tmux send-keys -t $SESSION:sim.0 "cd ~/sim_ws && source setup.bash" C-m
     tmux send-keys -t $SESSION:sim.0 "clear" C-m

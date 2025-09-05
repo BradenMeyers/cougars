@@ -62,6 +62,20 @@ else
     printWarning "Skipping installation of common dependencies"
 fi
 
+# Check and install vcstool
+if ! [ -x "$(command -v vcs)" ]; then
+    printInfo "vcstool is not installed."
+    read -p "Do you want to install vcstool? (y/n): " install_vcstool
+    if [[ "$install_vcstool" == "y" || "$install_vcstool" == "Y" ]]; then
+        printInfo "Installing vcstool"
+        sudo apt install vcstool
+    else
+        printWarning "Skipping installation of vcstool. Repo imports may fail."
+    fi
+else
+    printInfo "vcstool is already installed."
+fi
+
 # Set up bag directory
 if [ -d "bag" ]; then
     printWarning "The bag directory already exists"
@@ -130,7 +144,7 @@ fi
 # Ask if you want to copy the tmux config file
 read -p "Do you want to copy the tmux config file? (y/n): " copy_tmux_config
 if [[ "$copy_tmux_config" == "y" || "$copy_tmux_config" == "Y" ]]; then
-    cp template/.tmux.conf ~/.tmux.conf
+    cp templates/.tmux.conf ~/.tmux.conf
     printInfo "Copied the tmux config file to ~/.tmux.conf"
     tmux source-file ~/.tmux.conf
 
