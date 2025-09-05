@@ -9,6 +9,39 @@ source scripts/utils/print.sh
 
 echo "This script should be run from the root of the CoUGARS directory"
 
+# Ask user for clone method choice: HTTPS or SSH
+echo "Choose cloning method for repositories:"
+echo "1) SSH"
+echo "2) HTTPS"
+read -p "Enter the number of your choice [1 or 2]: " clone_method
+
+# Install common dependencies
+printInfo "Do you want to install vim, tmux, git, and mosh"
+read -p "Install common dependencies? (y/n): " install_deps
+
+
+# Check vcstool
+if ! [ -x "$(command -v vcs)" ]; then
+    printInfo "vcstool is not installed."
+    read -p "Do you want to install vcstool? (y/n): " install_vcstool
+    
+else
+    printInfo "vcstool is already installed."
+fi
+
+# Ask if you want to copy the tmux config file
+read -p "Do you want to copy the tmux config file? (y/n): " copy_tmux_config
+
+
+read -p "Do you want to start the docker containers at the en? (y/n): " start_docker
+
+## Would you like to build the workspaces?
+read -p "Do you want to build the workspaces? (y/n): " build
+
+# Check for sudo access
+sudo echo "Sudo access granted for user $USER" 
+
+
 # TODO check if coug is already an alias
 if grep -q "alias coug" ~/.bashrc; then
     printWarning "The alias 'coug' already exists in your .bashrc file"
@@ -31,49 +64,23 @@ if [ -z "$NAMESPACE" ]; then
 
 else
     vehicle_name="$NAMESPACE"
-    printInfo "Using existing vehicle namespace: $vehicle_name"
+    printWarning "Using existing vehicle namespace: $vehicle_name"
 fi
 
-# # Ask user for clone method choice: HTTPS or SSH
-# echo "Choose cloning method for repositories:"
-# echo "1) SSH"
-# echo "2) HTTPS"
-# read -p "Enter the number of your choice [1 or 2]: " clone_method
-
-# if [ "$clone_method" -eq 1 ]; then
-#     CLONE_PREFIX="git@github.com:BYU-FRoSt-Lab"
-#     printInfo "Cloning using SSH"
-# elif [ "$clone_method" -eq 2 ]; then
-#     CLONE_PREFIX="https://github.com/BYU-FRoSt-Lab"
-#     printInfo "Cloning using HTTPS"
-# else
-#     printError "Invalid choice. Defaulting to SSH."
-#     CLONE_PREFIX="git@github.com:BYU-FRoSt-Lab"
-# fi
-
-
 # Install common dependencies
-printInfo "Do you want to install vim, tmux, git, and mosh"
-read -p "Install common dependencies? (y/n): " install_deps
 if [[ "$install_deps" == "y" || "$install_deps" == "Y" ]]; then
     printInfo "Installing common dependencies: vim, tmux, git, and mosh"
-    sudo apt install vim tmux git mosh
+    sudo apt install -y vim tmux git mosh
 else
     printWarning "Skipping installation of common dependencies"
 fi
 
-# Check and install vcstool
-if ! [ -x "$(command -v vcs)" ]; then
-    printInfo "vcstool is not installed."
-    read -p "Do you want to install vcstool? (y/n): " install_vcstool
-    if [[ "$install_vcstool" == "y" || "$install_vcstool" == "Y" ]]; then
-        printInfo "Installing vcstool"
-        sudo apt install vcstool
-    else
-        printWarning "Skipping installation of vcstool. Repo imports may fail."
-    fi
+
+if [[ "$install_vcstool" == "y" || "$install_vcstool" == "Y" ]]; then
+    printInfo "Installing vcstool"
+    sudo apt install vcstool
 else
-    printInfo "vcstool is already installed."
+    printWarning "Skipping installation of vcstool. Repo imports may fail."
 fi
 
 # Set up bag directory
@@ -83,6 +90,16 @@ else
     mkdir bag
 fi
 
+if [ "$clone_method" -eq 1 ]; then
+    VCS_FILE_SUFFIX=""
+    printInfo "Cloning using SSH"
+elif [ "$clone_method" -eq 2 ]; then
+    VCS_FILE_SUFFIX="_https"
+    printInfo "Cloning using HTTPS"
+else
+    printError "Invalid clone method choice. Defaulting to SSH."
+    VCS_FILE_SUFFIX=""
+fi
 
 if [ "$(uname -m)" == "aarch64" ]; then
 
@@ -131,7 +148,7 @@ else
     ### START DEV-SPECIFIC SETUP ###
 
     # Set up vcs and clone repos
-    vcs import < .vcs/dev.repos
+    vcs import < .vcs/dev$VCS_FILE_SUFFIX.repos
 
     sudo chmod a+w -R cougars-base-station
     sudo chmod a+w -R .ssh_keys
@@ -140,55 +157,55 @@ else
 
 fi
 
-
-# Ask if you want to copy the tmux config file
-read -p "Do you want to copy the tmux config file? (y/n): " copy_tmux_config
+# Copy tmux config file
 if [[ "$copy_tmux_config" == "y" || "$copy_tmux_config" == "Y" ]]; then
     cp templates/.tmux.conf ~/.tmux.conf
     printInfo "Copied the tmux config file to ~/.tmux.conf"
     tmux source-file ~/.tmux.conf
-
 fi
+
 # Get rid of utf8 error
 unset LC_ALL
 
 bash scripts/utils/copy_templates.sh
 
-vcs import < .vcs/runtime.repos
+
+vcs import < .vcs/runtime$VCS_FILE_SUFFIX.repos
 
 mkdir -p ros2_ws/src
-vcs import < .vcs/cougars_ros2.repos ros2_ws/src
-cd ros2_ws/src/dvl-a50 
+vcs import < .vcs/cougars_ros2$VCS_FILE_SUFFIX.repos ros2_ws/src
+cd ros2_ws/src/dvl-a50
 git submodule update --init --recursive
 cd ../../..
 
-printInfo "Make sure to update the vehicle-specific configuration files in "config" now"
 
+# TODO ask if they want to do this
 # TODO add the prompt to ask if the user wants to do this
 sudo chmod a+w -R ros2_ws cougars-teensy cougars-gpio bag
 
+# TODO ask if they want to do this
 # Pull the latest Docker images
 printInfo "Pulling the latest Docker images for CoUGARs"
-bash scripts/update.sh
+bash scripts/update.sh -f
 
 
 ## Would you like to start the docker containers?
-# TODO: Need to fix this to check what conatiners are available based on architecture
-read -p "Do you want to start the docker containers now? (y/n): " start_docker
 if [[ "$start_docker" == "y" || "$start_docker" == "Y" ]]; then
-    printInfo "Starting the docker containers"
-    docker compose -f docker/docker-compose.yaml up -d
-    printInfo "Docker containers started"
-    printInfo "You can enter the main CoUGARs container by running 'coug'"
+    bash scripts/compose.sh 
 else
     printWarning "Skipping starting the docker containers"
 fi
+printInfo "You can start the containers by running 'bash scripts/compose.sh'"
 
-## Would you like to build the workspaces now?
-read -p "Do you want to build the workspaces now? (y/n): " build_now
-if [[ "$build_now" == "y" || "$build_now" == "Y" ]]; then
+
+if [[ "$build" == "y" || "$build" == "Y" ]]; then
     printInfo "Building the workspaces now"
-    bash scripts/build.sh
+    bash scripts/utils/build.sh
 else
     printWarning "Skipping building the workspaces"
 fi
+printInfo "You can build the workspaces by running 'bash scripts/utils/build.sh'"
+
+
+
+printInfo "Make sure to update the vehicle-specific configuration files in 'config' now"
