@@ -9,7 +9,6 @@ echo "This script should be run from the root of the CoUGARS directory"
 source scripts/utils/print.sh
 
 cd docker/
-pwd
 
 case $1 in
   "down")
