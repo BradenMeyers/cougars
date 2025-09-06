@@ -90,6 +90,7 @@ if [ -d "bag" ]; then
     printWarning "The bag directory already exists"
 else
     mkdir bag
+    sudo chmod a+w -R bag
 fi
 
 if [ "$clone_method" -eq 1 ]; then
