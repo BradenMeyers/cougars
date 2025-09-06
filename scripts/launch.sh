@@ -12,7 +12,7 @@ source ~/config/cougarsrc.sh
 #   echo ""
   
 #   if [ "$(uname -m)" == "aarch64" ]; then
-#     bash ~/gpio/strobe.sh off
+#     bash ~/teensy_ws/gpio_tools/strobe.sh off
 #     bash ~/ros2_ws/dvl_tools/acoustics_on.sh false
 #   fi
   
@@ -63,8 +63,8 @@ if [ "$(uname -m)" == "aarch64" ]; then
   ros2 daemon start
   sleep 3
   # Start the strobe light and Teensy board
-  bash ~/gpio/strobe.sh on
-  bash ~/gpio/power.sh on
+  bash ~/teensy_ws/gpio_tools/strobe.sh on
+  bash ~/teensy_ws/gpio_tools/power.sh on
 
   # Test for Teensy board connection
   if [ -z "$(tycmd list | grep Teensy)" ]; then
