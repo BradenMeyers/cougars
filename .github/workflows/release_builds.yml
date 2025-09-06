@@ -29,7 +29,8 @@ jobs:
       - name: Build and push vehicle image with tag
         uses: docker/build-push-action@v6
         with:
-          context: docker/vehicle/runtime
+          context: ./
+          dockerfile: docker/vehicle/runtime/Dockerfile
           platforms: linux/amd64,linux/arm64
           push: true
           tags: ${{ secrets.DOCKERHUB_USERNAME }}/cougars:vehicle-${{ github.ref_name }}
@@ -56,7 +57,8 @@ jobs:
       - name: Build and push base station image with tag
         uses: docker/build-push-action@v6
         with:
-          context: docker/base_station/runtime
+          context: ./
+          dockerfile: docker/base_station/runtime/Dockerfile
           platforms: linux/amd64
           push: true
           tags: ${{ secrets.DOCKERHUB_USERNAME }}/cougars:base_station-${{ github.ref_name }}
