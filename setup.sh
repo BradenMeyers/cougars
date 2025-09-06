@@ -33,13 +33,11 @@ fi
 read -p "Do you want to copy the tmux config file? (y/n): " copy_tmux_config
 
 
-read -p "Do you want to start the docker containers at the en? (y/n): " start_docker
+read -p "Do you want to start the docker containers at the end? (y/n): " start_docker
 
 ## Would you like to build the workspaces?
 read -p "Do you want to build the workspaces? (y/n): " build
 
-# Check for sudo access
-sudo echo "Sudo access granted for user $USER" 
 
 
 # TODO check if coug is already an alias
@@ -66,6 +64,10 @@ else
     vehicle_name="$NAMESPACE"
     printWarning "Using existing vehicle namespace: $vehicle_name"
 fi
+
+bash scripts/utils/copy_templates.sh
+# Check for sudo access
+sudo echo "Sudo access granted for user $USER" 
 
 # Install common dependencies
 if [[ "$install_deps" == "y" || "$install_deps" == "Y" ]]; then
@@ -167,9 +169,6 @@ fi
 # Get rid of utf8 error
 unset LC_ALL
 
-bash scripts/utils/copy_templates.sh
-
-
 vcs import < .vcs/runtime$VCS_FILE_SUFFIX.repos
 
 mkdir -p ros2_ws/src
@@ -200,7 +199,7 @@ printInfo "You can start the containers by running 'bash scripts/compose.sh'"
 
 if [[ "$build" == "y" || "$build" == "Y" ]]; then
     printInfo "Building the workspaces now"
-    bash scripts/utils/build.sh
+    bash scripts/utils/build.sh -c
 else
     printWarning "Skipping building the workspaces"
 fi

@@ -1,7 +1,6 @@
 #!/bin/bash
 # Created by Nelson Durrant, Sep 2024
 #
-# Pulls and runs the most recent Docker image
 # - Use 'bash compose.sh down' to stop the image
 # - Run this script after running 'setup.sh' to pull the most recent image and run it
 # - Make sure you run this from the root of the top-level repo
@@ -9,10 +8,13 @@
 echo "This script should be run from the root of the CoUGARS directory"
 source scripts/utils/print.sh
 
+cd docker/
+pwd
+
 case $1 in
   "down")
     printWarning "Stopping all docker images"
-    docker compose -f docker/docker-compose.yaml down
+    docker compose down
     ;;
   *)
     # Check the system architecture
@@ -29,6 +31,6 @@ case $1 in
             containers=("cougars" "cougars_base")
         fi
     fi
-    docker compose -f docker/docker-compose.yaml up -d "${containers[@]}"
+    docker compose up -d "${containers[@]}"
     ;;
 esac
