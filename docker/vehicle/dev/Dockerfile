@@ -53,19 +53,20 @@ RUN pip3 install numpy==1.24.0 \
     tmuxp 
     
     
-USER root
+USER ${LABNAME}
 WORKDIR /home/${LABNAME}
 # Install PlatformIO
 RUN curl -fsSL -o get-platformio.py https://raw.githubusercontent.com/platformio/platformio-core-installer/master/get-platformio.py \
     && python3 get-platformio.py \
-    && rm -f get-platformio.py
+    && rm -f get-platformio.py \
+    && mkdir -p /usr/local/bin
 
+USER root
 # Set up PlatformIO shell commands
 RUN install -d /usr/local/bin && \
     ln -s /home/${LABNAME}/.platformio/penv/bin/platformio /usr/local/bin/platformio && \
     ln -s /home/${LABNAME}/.platformio/penv/bin/pio /usr/local/bin/pio && \
     ln -s /home/${LABNAME}/.platformio/penv/bin/piodebuggdb /usr/local/bin/piodebuggdb
-
 
 USER ${LABNAME}
 
