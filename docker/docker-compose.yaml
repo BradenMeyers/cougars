@@ -41,9 +41,7 @@ services:
       - ../config:/home/frostlab/config:rw
       - ../ros2_ws:/home/frostlab/ros2_ws
       - ../teensy_ws:/home/frostlab/teensy_ws
-      - ../gpio:/home/frostlab/gpio
       - ../scripts:/home/frostlab/scripts
-      # - ../moos-ivp-extend:/home/frostlab/moos-ivp-extend
       - ./vehicle/entrypoint.sh:/home/frostlab/entrypoint.sh
       - /etc/localtime:/etc/localtime:ro # Syncs the container's time with the host
       - /dev:/dev:rw
@@ -61,14 +59,13 @@ services:
       DISPLAY: $DISPLAY # Required for GUI applications
       MPLBACKEND: Qt5Agg # Required for GUI applications
     volumes:
+      - ../ros2_ws:/home/frostlab/ros2_ws
+      - ../base_station:/home/frostlab/base_station
+      - ../base_station/base_station_ros2:/home/frostlab/ros2_ws/src/base_station_ros2
       - ../bag:/home/frostlab/bag:rw
       - ../config:/home/frostlab/config:rw
-      - ../ros2_ws:/home/frostlab/ros2_ws
       - ../teensy_ws:/home/frostlab/teensy_ws
-      - ../gpio:/home/frostlab/gpio
       - ../scripts:/home/frostlab/scripts
-      # - ../moos-ivp-extend:/home/frostlab/moos-ivp-extend
-      - ../base_station:/home/frostlab/base_station
       - ../.ssh_keys:/home/frostlab/.ssh     # Syncs ssh keys for the vehicles to save and speed up the process
       - ./base_station/entrypoint.sh:/home/frostlab/entrypoint.sh
       - /etc/localtime:/etc/localtime:ro # Syncs the container's time with the host
