@@ -36,7 +36,6 @@ jobs:
           platforms: linux/amd64,linux/arm64
           push: true
           tags: |
-            ${{ secrets.DOCKERHUB_USERNAME }}/cougars:vehicle
             ${{ secrets.DOCKERHUB_USERNAME }}/cougars:vehicle-${GITHUB_REF_NAME}
 
 
@@ -66,5 +65,4 @@ jobs:
           platforms: linux/amd64
           push: true
           tags: |
-            ${{ secrets.DOCKERHUB_USERNAME }}/cougars:base_station
             ${{ secrets.DOCKERHUB_USERNAME }}/cougars:base_station-${GITHUB_REF_NAME}
