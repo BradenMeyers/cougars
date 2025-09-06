@@ -7,6 +7,7 @@ ros2_ws
 !config/cougarsrc.sh
 !config/coug*params.yaml
 !config/fleet_params.yaml
+!config/base_station_params.yaml
 config/deploy_tmp
 .ssh_keys
 !.ssh_keys/README.md
