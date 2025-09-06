@@ -55,3 +55,5 @@ case $1 in
     docker compose -f "$COMPOSE_FILE" up -d "${containers[@]}"
     ;;
 esac
+
+cd ..
