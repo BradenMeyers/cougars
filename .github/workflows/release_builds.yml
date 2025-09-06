@@ -35,8 +35,7 @@ jobs:
           context: docker/vehicle/runtime
           platforms: linux/amd64,linux/arm64
           push: true
-          tags: |
-            ${{ secrets.DOCKERHUB_USERNAME }}/cougars:vehicle-${GITHUB_REF_NAME}
+          tags: ${{ secrets.DOCKERHUB_USERNAME }}/cougars:vehicle-${GITHUB_REF_NAME}
 
 
   build-and-push-base-station:
@@ -64,5 +63,4 @@ jobs:
           context: docker/base_station/runtime
           platforms: linux/amd64
           push: true
-          tags: |
-            ${{ secrets.DOCKERHUB_USERNAME }}/cougars:base_station-${GITHUB_REF_NAME}
+          tags: ${{ secrets.DOCKERHUB_USERNAME }}/cougars:base_station-${GITHUB_REF_NAME}
