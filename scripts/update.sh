@@ -22,7 +22,7 @@ if [ $FORCE -eq 1 ]; then
 
     echo "Cleaning ros2_ws and other directories"
     rm -rf ros2_ws/src
-    rm -rf cougars-teensy cougars-gpio cougars-base-station 
+    rm -rf teensy_ws gpio base_station
 
     vcs import < .vcs/runtime$VCS_FILE_SUFFIX.repos
 
@@ -34,21 +34,21 @@ if [ $FORCE -eq 1 ]; then
 
     # TODO ask if they want to do this
     # TODO add the prompt to ask if the user wants to do this
-    sudo chmod a+w -R ros2_ws cougars-teensy cougars-gpio
+    sudo chmod a+w -R ros2_ws teensy_ws gpio
 
     if [ "$(uname -m)" != "aarch64" ]; then
         printInfo "Including base station repository for non-ARM architecture"
         vcs import < .vcs/dev$VCS_FILE_SUFFIX.repos
-        sudo chmod a+w -R cougars-base-station
+        sudo chmod a+w -R base_station
     fi
 else
 
-    vcs pull cougars-teensy cougars-gpio 
+    vcs pull teensy_ws gpio 
     vcs pull ros2_ws/src
 
     # If device is not ARM, pull base station too
     if [ "$(uname -m)" != "aarch64" ]; then
-        vcs pull cougars-base-station
+        vcs pull base_station
     fi
 fi
 

@@ -1,14 +1,10 @@
 **/.vscode
 bag
 config/*
-cougars-ros2
-cougars-teensy
+teensy_ws
 cougars-gpio
-cougars-docs
-cougars-base-station
-cougars_base_station
+base-station
 moos-ivp-extend
-cougars_sim_converters
 !config/cougarsrc.sh
 !config/coug*params.yaml
 !config/fleet_params.yaml

@@ -20,10 +20,10 @@ services:
       # - ~/.local/share/holoocean:/home/ue4/.local/share/holoocean
       - /dev:/dev
       - ../ros2_ws:/home/ue4/coug_ros2
-      - ../cougars-base-station/sim/holo-translator:/home/ue4/sim_ws/src/holo-translator
-      - ../cougars-base-station/sim/config:/home/ue4/sim_config
+      - ../base_station/sim/holo-translator:/home/ue4/sim_ws/src/holo-translator
+      - ../base_station/sim/config:/home/ue4/sim_config
       - ../config:/home/ue4/config
-      - ../cougars-base-station/sim/docker/runtime/entrypoint.sh:/home/ue4/entrypoint.sh
+      - ../base_station/sim/docker/runtime/entrypoint.sh:/home/ue4/entrypoint.sh
       - ../scripts:/home/ue4/scripts
     entrypoint: ["/bin/bash", "/home/ue4/entrypoint.sh"]
     restart: always  # Optional: Keeps the container running after exit unless you want it to be removed like with --rm
@@ -40,8 +40,8 @@ services:
       - ../bag:/home/frostlab/bag:rw
       - ../config:/home/frostlab/config:rw
       - ../ros2_ws:/home/frostlab/ros2_ws
-      - ../cougars-teensy:/home/frostlab/teensy_ws
-      - ../cougars-gpio:/home/frostlab/gpio
+      - ../teensy_ws:/home/frostlab/teensy_ws
+      - ../gpio:/home/frostlab/gpio
       - ../scripts:/home/frostlab/scripts
       # - ../moos-ivp-extend:/home/frostlab/moos-ivp-extend
       - ./vehicle/entrypoint.sh:/home/frostlab/entrypoint.sh
@@ -52,7 +52,7 @@ services:
 
   cougars_base:
     image: frostlab/cougars:base_station
-    build: ./base_station
+    build: ./base_station/dev
     container_name: cougars_base
     user: frostlab
     network_mode: host
@@ -64,11 +64,11 @@ services:
       - ../bag:/home/frostlab/bag:rw
       - ../config:/home/frostlab/config:rw
       - ../ros2_ws:/home/frostlab/ros2_ws
-      - ../cougars-teensy:/home/frostlab/teensy_ws
-      - ../cougars-gpio:/home/frostlab/gpio
+      - ../teensy_ws:/home/frostlab/teensy_ws
+      - ../gpio:/home/frostlab/gpio
       - ../scripts:/home/frostlab/scripts
       # - ../moos-ivp-extend:/home/frostlab/moos-ivp-extend
-      - ../cougars-base-station:/home/frostlab/base_station
+      - ../base_station:/home/frostlab/base_station
       - ../.ssh_keys:/home/frostlab/.ssh     # Syncs ssh keys for the vehicles to save and speed up the process
       - ./base_station/entrypoint.sh:/home/frostlab/entrypoint.sh
       - /etc/localtime:/etc/localtime:ro # Syncs the container's time with the host

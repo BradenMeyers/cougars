@@ -30,7 +30,7 @@ Initializes a new environment, either on a **Raspberry Pi 5** or a **local devel
 * **On development machine:**
 
   * Imports repositories listed in `.vcs/dev.repos`.
-  * Sets permissions for `cougars-base-station` and `.ssh_keys`.
+  * Sets permissions for `base-station` and `.ssh_keys`.
 * **General setup tasks (both):**
 
   * Adds a `coug` alias for entering the Docker container.
