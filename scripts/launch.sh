@@ -32,7 +32,6 @@ DEMO="False" # Default value for demo
 VERBOSE="False"
 GPS="False"
 FINS="False"
-MISSION_NAME="/home/frostlab/config/mission.yaml" # Default mission file
 # Set a default vehicle parameter file. It can be overridden by the -s flag.
 
 while getopts "svgfdb" opt; do
