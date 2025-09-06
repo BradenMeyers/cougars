@@ -30,3 +30,4 @@ WORKDIR /home/${LABNAME}
 # TODO in the future make this a multistage build and it copies over the built into the new image
 
 
+ENTRYPOINT [ "/home/${LABNAME}/entrypoint.sh" ]
