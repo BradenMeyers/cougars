@@ -30,7 +30,7 @@ jobs:
         uses: docker/build-push-action@v6
         with:
           context: ./
-          dockerfile: ./docker/vehicle/runtime/Dockerfile
+          file: ./docker/vehicle/runtime/Dockerfile
           platforms: linux/amd64,linux/arm64
           push: true
           tags: ${{ secrets.DOCKERHUB_USERNAME }}/cougars:vehicle-${{ github.ref_name }}
@@ -58,7 +58,7 @@ jobs:
         uses: docker/build-push-action@v6
         with:
           context: ./
-          dockerfile: ./docker/base_station/runtime/Dockerfile
+          file: ./docker/base_station/runtime/Dockerfile
           platforms: linux/amd64
           push: true
           tags: ${{ secrets.DOCKERHUB_USERNAME }}/cougars:base_station-${{ github.ref_name }}
