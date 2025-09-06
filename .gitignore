@@ -3,6 +3,7 @@ bag
 config/*
 teensy_ws
 base_station
+!docker/base_station
 ros2_ws
 !config/cougarsrc.sh
 !config/coug*params.yaml
