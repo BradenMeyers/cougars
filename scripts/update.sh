@@ -1,33 +1,56 @@
 #!/bin/bash
 # - Make sure you run this from the root of the top-level repo
 
+source scripts/utils/print.sh
 
 # Check for force flag
 FORCE=0
 if [[ "$1" == "-f" ]]; then
     FORCE=1
+    shift
+fi          
+
+# Determine clone method from argument or default to SSH
+if [[ "$1" == "-h" ]]; then
+    VCS_FILE_SUFFIX="_https"
+else
+    VCS_FILE_SUFFIX=""
 fi
 
 # Set up workspace
-# To be run from the root of the top-level repo
 if [ $FORCE -eq 1 ]; then
-    echo "Force flag set: cleaning ros2_ws and other directories"
+
+    echo "Cleaning ros2_ws and other directories"
     rm -rf ros2_ws/src
-    rm -rf cougars-teensy cougars-gpio cougars-base-station cougars-docs
-    mkdir -p ros2_ws/src
+    rm -rf cougars-teensy cougars-gpio cougars-base-station 
 
-    vcs import < .vcs/runtime.repos
+    vcs import < .vcs/runtime$VCS_FILE_SUFFIX.repos
 
     mkdir -p ros2_ws/src
-    vcs import < .vcs/cougars.ros2.repos ros2_ws/src
+    vcs import < .vcs/cougars_ros2$VCS_FILE_SUFFIX.repos ros2_ws/src
     cd ros2_ws/src/dvl-a50 
     git submodule update --init --recursive
     cd ../../..
 
-    # Set up vcs and clone repos
-    vcs import < .vcs/dev.repos
-fi
+    # TODO ask if they want to do this
+    # TODO add the prompt to ask if the user wants to do this
+    sudo chmod a+w -R ros2_ws cougars-teensy cougars-gpio
 
+    if [ "$(uname -m)" != "aarch64" ]; then
+        printInfo "Including base station repository for non-ARM architecture"
+        vcs import < .vcs/dev$VCS_FILE_SUFFIX.repos
+        sudo chmod a+w -R cougars-base-station
+    fi
+else
+
+    vcs pull cougars-teensy cougars-gpio 
+    vcs pull ros2_ws/src
+
+    # If device is not ARM, pull base station too
+    if [ "$(uname -m)" != "aarch64" ]; then
+        vcs pull cougars-base-station
+    fi
+fi
 
 
 # Docker updates
@@ -37,12 +60,6 @@ if [ "$(uname -m)" == "aarch64" ]; then
 else
     printInfo "Pulling base station image"
     docker pull frostlab/cougars:base_station
-    vcs pull cougars-base-station cougars-docs
 fi
-
-vcs pull cougars-teensy cougars-gpio 
-vcs pull ros2_ws/src
-
-
 
 
