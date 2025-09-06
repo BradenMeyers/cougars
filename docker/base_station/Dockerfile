@@ -32,7 +32,10 @@ RUN pip3 install --no-cache-dir \
     PyQt6 \
     graphviz \
     transforms3d \
-    tkintermapview
+    tkintermapview \
+    paramiko \
+    digi-xbee \
+    pathlib
 
 
 USER ${LABNAME}
