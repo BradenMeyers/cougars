@@ -68,7 +68,7 @@ jobs:
           password: ${{ secrets.DOCKERHUB_TOKEN }}
       - uses: docker/build-push-action@v6
         with:
-          context: ./docker/dev/vehicle
+          context: ./docker/vehicle/dev
           push: true
           tags: ${{ secrets.DOCKERHUB_USERNAME }}/cougars:vehicle
 
@@ -84,6 +84,6 @@ jobs:
           password: ${{ secrets.DOCKERHUB_TOKEN }}
       - uses: docker/build-push-action@v6
         with:
-          context: ./docker/dev/base_station
+          context: ./docker/base_station/dev
           push: true
           tags: ${{ secrets.DOCKERHUB_USERNAME }}/cougars:base_station
