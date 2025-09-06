@@ -1,8 +1,5 @@
 name: Docker Build on Tag
 
-# RIGHT NOW THESE REQUIRE THE VEHICLE AND BASE STATION TO BOTH BE BUILT AND UP TO DATE
-
-
 # Trigger only on tag pushes
 on:
   push:
@@ -35,8 +32,7 @@ jobs:
           context: docker/vehicle/runtime
           platforms: linux/amd64,linux/arm64
           push: true
-          tags: ${{ secrets.DOCKERHUB_USERNAME }}/cougars:vehicle-${GITHUB_REF_NAME}
-
+          tags: ${{ secrets.DOCKERHUB_USERNAME }}/cougars:vehicle-${{ github.ref_name }}
 
   build-and-push-base-station:
     runs-on: ubuntu-latest
@@ -63,4 +59,4 @@ jobs:
           context: docker/base_station/runtime
           platforms: linux/amd64
           push: true
-          tags: ${{ secrets.DOCKERHUB_USERNAME }}/cougars:base_station-${GITHUB_REF_NAME}
+          tags: ${{ secrets.DOCKERHUB_USERNAME }}/cougars:base_station-${{ github.ref_name }}
