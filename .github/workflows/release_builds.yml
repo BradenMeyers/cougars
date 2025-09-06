@@ -1,8 +1,5 @@
 name: Docker Build on Tag
 
-# RIGHT NOW THESE REQUIRE THE VEHICLE AND BASE STATION TO BOTH BE BUILT AND UP TO DATE
-
-
 # Trigger only on tag pushes
 on:
   push:
@@ -32,13 +29,11 @@ jobs:
       - name: Build and push vehicle image with tag
         uses: docker/build-push-action@v6
         with:
-          context: docker/vehicle/runtime
+          context: ./
+          file: ./docker/vehicle/runtime/Dockerfile
           platforms: linux/amd64,linux/arm64
           push: true
-          tags: |
-            ${{ secrets.DOCKERHUB_USERNAME }}/cougars:vehicle
-            ${{ secrets.DOCKERHUB_USERNAME }}/cougars:vehicle-${GITHUB_REF_NAME}
-
+          tags: ${{ secrets.DOCKERHUB_USERNAME }}/cougars:vehicle-${{ github.ref_name }}
 
   build-and-push-base-station:
     runs-on: ubuntu-latest
@@ -62,9 +57,8 @@ jobs:
       - name: Build and push base station image with tag
         uses: docker/build-push-action@v6
         with:
-          context: docker/base_station/runtime
+          context: ./
+          file: ./docker/base_station/runtime/Dockerfile
           platforms: linux/amd64
           push: true
-          tags: |
-            ${{ secrets.DOCKERHUB_USERNAME }}/cougars:base_station
-            ${{ secrets.DOCKERHUB_USERNAME }}/cougars:base_station-${GITHUB_REF_NAME}
+          tags: ${{ secrets.DOCKERHUB_USERNAME }}/cougars:base_station-${{ github.ref_name }}
