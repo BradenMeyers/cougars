@@ -16,7 +16,7 @@ echo "2) HTTPS"
 read -p "Enter the number of your choice [1 or 2]: " clone_method
 
 # Install common dependencies
-printInfo "Do you want to install vim, tmux, git, and mosh"
+printInfo "Do you want to install vim, tmux, git, chrony, and mosh"
 read -p "Install common dependencies? (y/n): " install_deps
 
 
@@ -30,7 +30,7 @@ else
 fi
 
 # Ask if you want to copy the tmux config file
-read -p "Do you want to copy the tmux config file? (y/n): " copy_tmux_config
+read -p "Do you want to link the tmux config file? (y/n): " link_tmux_config
 
 
 read -p "Do you want to start the docker containers at the end? (y/n): " start_docker
@@ -71,8 +71,8 @@ sudo echo "Sudo access granted for user $USER"
 
 # Install common dependencies
 if [[ "$install_deps" == "y" || "$install_deps" == "Y" ]]; then
-    printInfo "Installing common dependencies: vim, tmux, git, and mosh"
-    sudo apt install -y vim tmux git mosh
+    printInfo "Installing common dependencies: vim, tmux, git, chrony, and mosh"
+    sudo apt install -y vim tmux git chrony mosh
 else
     printWarning "Skipping installation of common dependencies"
 fi
@@ -93,15 +93,17 @@ else
 fi
 
 if [ "$clone_method" -eq 1 ]; then
-    VCS_FILE_SUFFIX=""
+    VCS_CLONE_METHOD=""
     printInfo "Cloning using SSH"
 elif [ "$clone_method" -eq 2 ]; then
-    VCS_FILE_SUFFIX="_https"
+    VCS_CLONE_METHOD="-h"
     printInfo "Cloning using HTTPS"
 else
     printError "Invalid clone method choice. Defaulting to SSH."
-    VCS_FILE_SUFFIX=""
+    VCS_CLONE_METHOD=""
 fi
+printInfo "Using vcs file suffix: $VCS_CLONE_METHOD"
+
 
 if [ "$(uname -m)" == "aarch64" ]; then
 
@@ -119,14 +121,9 @@ if [ "$(uname -m)" == "aarch64" ]; then
       sudo sh get-docker.sh
       rm get-docker.sh
       sudo usermod -aG docker $USERNAME
-      newgrp docker
   else
       printWarning "Docker is already installed"
   fi
-
-  # Install dependencies
-  sudo apt install -y chrony 
-  ### END RT-SPECIFIC SETUP ###
 
   # Set up chrony config file
   if [ -f /etc/chrony/chrony.conf ]; then
@@ -134,34 +131,28 @@ if [ "$(uname -m)" == "aarch64" ]; then
   else
       sudo ln -s $HOME/cougars/config/local/chrony.conf /etc/chrony/chrony.conf
   fi
-
-    # TODO copy these instead of symlinking
-  # Set up udev rules
-  if [ -f /etc/udev/rules.d/00-teensy.rules ]; then
-      printWarning "The udev rules symlink already exists"
-  else
-      sudo ln -s $HOME/cougars/config/local/00-teensy.rules /etc/udev/rules.d/00-teensy.rules
-      sudo ln -s $HOME/cougars/config/local/99-teensy.rules /etc/udev/rules.d/99-teensy.rules
-      sudo ln -s $HOME/cougars/config/local/99-seatrac.rules /etc/udev/rules.d/99-seatrac.rules
-      sudo udevadm control --reload-rules
-      sudo udevadm trigger
-  fi
 else 
     ### START DEV-SPECIFIC SETUP ###
 
-    # Set up vcs and clone repos
-    vcs import < .vcs/dev$VCS_FILE_SUFFIX.repos
-
-    sudo chmod a+w -R cougars-base-station
     sudo chmod a+w -R .ssh_keys
-
     ### END DEV-SPECIFIC SETUP ###
+fi
 
+# TODO copy these instead of symlinking
+# Set up udev rules
+if [ -f /etc/udev/rules.d/00-teensy.rules ]; then
+    printWarning "The udev rules symlink already exists"
+else
+    sudo ln -s $HOME/cougars/config/local/00-teensy.rules /etc/udev/rules.d/00-teensy.rules
+    sudo ln -s $HOME/cougars/config/local/99-teensy.rules /etc/udev/rules.d/99-teensy.rules
+    sudo ln -s $HOME/cougars/config/local/99-seatrac.rules /etc/udev/rules.d/99-seatrac.rules
+    sudo udevadm control --reload-rules
+    sudo udevadm trigger
 fi
 
 # Copy tmux config file
-if [[ "$copy_tmux_config" == "y" || "$copy_tmux_config" == "Y" ]]; then
-    cp templates/.tmux.conf ~/.tmux.conf
+if [[ "$link_tmux_config" == "y" || "$link_tmux_config" == "Y" ]]; then
+    ln config/local/.tmux.conf ~/.tmux.conf
     printInfo "Copied the tmux config file to ~/.tmux.conf"
     tmux source-file ~/.tmux.conf
 fi
@@ -169,23 +160,10 @@ fi
 # Get rid of utf8 error
 unset LC_ALL
 
-vcs import < .vcs/runtime$VCS_FILE_SUFFIX.repos
-
-mkdir -p ros2_ws/src
-vcs import < .vcs/cougars_ros2$VCS_FILE_SUFFIX.repos ros2_ws/src
-cd ros2_ws/src/dvl-a50
-git submodule update --init --recursive
-cd ../../..
-
-
-# TODO ask if they want to do this
-# TODO add the prompt to ask if the user wants to do this
-sudo chmod a+w -R ros2_ws cougars-teensy cougars-gpio bag
-
 # TODO ask if they want to do this
 # Pull the latest Docker images
 printInfo "Pulling the latest Docker images for CoUGARs"
-bash scripts/update.sh -f
+bash scripts/update.sh -f $VCS_CLONE_METHOD
 
 
 ## Would you like to start the docker containers?
