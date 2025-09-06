@@ -169,11 +169,11 @@ bash scripts/update.sh -f $VCS_CLONE_METHOD
 
 ## Would you like to start the docker containers?
 if [[ "$start_docker" == "y" || "$start_docker" == "Y" ]]; then
-    bash scripts/compose.sh 
+    bash compose.sh 
 else
     printWarning "Skipping starting the docker containers"
 fi
-printInfo "You can start the containers by running 'bash scripts/compose.sh'"
+printInfo "You can start the containers by running 'bash compose.sh'"
 
 
 if [[ "$build" == "y" || "$build" == "Y" ]]; then
