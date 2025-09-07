@@ -53,6 +53,7 @@ jobs:
       - uses: docker/build-push-action@v6
         with:
           context: ./docker/gtsam
+          platforms: linux/amd64,linux/arm64
           push: true
           tags: ${{ secrets.DOCKERHUB_USERNAME }}/cougars:gtsam
 
@@ -69,6 +70,7 @@ jobs:
       - uses: docker/build-push-action@v6
         with:
           context: ./docker/vehicle/dev
+          platforms: linux/amd64,linux/arm64
           push: true
           tags: ${{ secrets.DOCKERHUB_USERNAME }}/cougars:vehicle
 
@@ -85,5 +87,6 @@ jobs:
       - uses: docker/build-push-action@v6
         with:
           context: ./docker/base_station/dev
+          platforms: linux/amd64
           push: true
           tags: ${{ secrets.DOCKERHUB_USERNAME }}/cougars:base_station
